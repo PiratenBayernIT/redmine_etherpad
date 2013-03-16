@@ -11,7 +11,7 @@ Redmine::Plugin.register :redmine_etherpad do
   description 'Embed etherpad-lite pads in redmine wikis.'
   version '0.0.1'
   url 'https://github.com/yourcelf/redmine_etherpad'
-  author_url 'https://github.com/yourcelf'
+  author_url 'https://github.com/PiratenBayernIT'
 
   Redmine::WikiFormatting::Macros.register do
     desc "Embed etherpad"
@@ -68,6 +68,14 @@ Redmine::Plugin.register :redmine_etherpad do
         end
       end
       
+      # Hack for piratenpad.de. When referencing existings pads, everything is ok.
+      # But when creating new pads, an Etherpad is created instead of an Etherpad Lite.
+      # To fix this, append "/p/" when no team is given
+      # Teampads still use Etherpad, so nothing has to be added in this case.
+      if host == "piratenpad.de" and not team
+        host = "piratenpad.de/p"
+      end
+
       padsrc = team ? "#{scheme}://#{team}.#{host}/" : "#{scheme}://#{host}/"
       return CGI::unescapeHTML("<iframe src='#{padsrc}#{URI.encode(padname)}?#{hash_to_querystring(controls)}' width='#{width}' height='#{height}'></iframe>").html_safe
     end
