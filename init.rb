@@ -30,9 +30,13 @@ Redmine::Plugin.register :redmine_etherpad do
         'noColors' => conf.fetch('noColors', false),
         'width' => conf.fetch('width', '640px'),
         'height' => conf.fetch('height', '480px'),
+        'fullScreen' => conf.fetch('fullScreen', true),
+        'team' => conf.fetch("team", nil),
+        'host' => conf.fetch("host"),
+        'scheme' => conf.fetch("scheme", "https")
       }
-
-      # Override defaults with given arguments.
+        
+      # Override default control settings with given arguments.
       padname, *params = args
       for param in params
         key, val = param.strip().split("=")
@@ -50,8 +54,12 @@ Redmine::Plugin.register :redmine_etherpad do
         return "TODO: embed read-only."
       end
 
+      # Extract settings which are not settings for Etherpad.
       width = controls.delete('width')
       height = controls.delete('height')
+      team = controls.delete('team')
+      host = controls.delete('host')
+      scheme = controls.delete('scheme')
 
       def hash_to_querystring(hash)
         hash.keys.inject('') do |query_string, key|
@@ -60,7 +68,10 @@ Redmine::Plugin.register :redmine_etherpad do
         end
       end
       
-      return CGI::unescapeHTML("<iframe src='#{conf['host']}/p/#{URI.encode(padname)}?#{hash_to_querystring(controls)}' width='#{width}' height='#{height}'></iframe>").html_safe
+      padsrc = team ? "#{scheme}://#{team}.#{host}/" : "#{scheme}://#{host}/"
+      return CGI::unescapeHTML("<iframe src='#{padsrc}#{URI.encode(padname)}?#{hash_to_querystring(controls)}' width='#{width}' height='#{height}'></iframe>").html_safe
     end
   end
 end
+
+# vim: set sw=2 ts=2 sts=2 expandtab: #
