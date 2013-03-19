@@ -1,6 +1,6 @@
 h1. What does it do?
 
-This redmine plugin adds a macro in your redmine wikis, which allows the embedding of etherpads.  It provides the same result as "this hack":http://rschulte.com/blog/2011/etherpad-and-redmine-hack-how-we-are-embedding-collaborative-documents-redmine, but more easily, and without the unsafety of allowing arbitrary html.
+This redmine plugin adds a macro in your redmine wikis, which allows the embedding of etherpads.
 
 h2. Macro: etherpad()
 
@@ -10,34 +10,31 @@ Requires at least one argument, the name of the etherpad to embed.
 
 Other arguments should be listed in "key=val" format, and include:
 
-* @width@: the width of the iframe (e.g. "640px", "100%"), default=640px.
+* @width@: the width of the iframe (e.g. "640px", "100%"), default=100%.
 * @height@: the height of the iframe (e.g. ("800px"), default=480px.
 * @showControls@: true/false (default true)
 * @showChat@: true/false (default true)
 * @showLineNumbers@: true/false (default false)
 * @useMonospaceFont@: true/false (default false)
 * @noColors@: true/false (default false)
+* @fullScreen@: true/false (default true)
 
 Example:
 
-<pre><code>{{etherpad(myHotPad, useMonospaceFont=true, width=100%)}}</code></pre>
+<pre><code>{{etherpad(OnlineBings, useMonospaceFont=true, width=90%)}}</code></pre>
+
+To use a teampad:
+
+<pre><code>{{etherpad(Test, team=oberpfalz)}}</code></pre>
 
 h2. Installation
 
-
-On Redmine 1.x, Navigate to:
-@[redmine_install_path]/vendors/plugins@
-On Redmine >= 2.1, navigate to:
+Navigate to:
 @[redmine_install_path]/plugins@
 
 Clone this repo.
-@git clone git://github.com/yourcelf/redmine_etherpad.git@
+@git clone git://github.com/PiratenBayernIT/redmine_etherpad.git@
 
-If you are using redmine 1.x, checkout the @redmine_1.x@ branch:
-
-@git checkout -b redmine_1.x origin/redmine_1.x@
-
-For redmine 2.1+, just use master.
 
 h3. Configuration
 
@@ -45,14 +42,16 @@ Add an "etherpad" configuration section to "config/configuration.yml" in which y
 
 <pre><code>default:
   etherpad:
-    host: https://etherpad.example.com
+    host: piratenpad.de
+    scheme: https
 </code></pre>
 
 You can also list any of the embed arguments to replace defaults, for example:
 
 <pre><code>default:
   etherpad:
-    host: https://etherpad.example.com
+    host: piratenpad.de
+    scheme: https
     showLineNumbers: true
     useMonospaceFont: true
 </code></pre>

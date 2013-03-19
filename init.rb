@@ -28,7 +28,7 @@ Redmine::Plugin.register :redmine_etherpad do
         'showLineNumbers' => conf.fetch('showLineNumbers', false),
         'useMonospaceFont' => conf.fetch('useMonospaceFont', false),
         'noColors' => conf.fetch('noColors', false),
-        'width' => conf.fetch('width', '640px'),
+        'width' => conf.fetch('width', '100%'),
         'height' => conf.fetch('height', '480px'),
         'fullScreen' => conf.fetch('fullScreen', true),
         'team' => conf.fetch("team", nil),
