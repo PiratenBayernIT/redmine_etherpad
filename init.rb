@@ -5,6 +5,15 @@
 require 'redmine'
 require 'uri'
 
+
+def hash_to_querystring(hash)
+  hash.keys.inject('') do |query_string, key|
+    query_string << '&' unless key == hash.keys.first
+    query_string << "#{URI.encode(key.to_s)}=#{URI.encode(hash[key].to_s)}"
+  end
+end
+
+      
 Redmine::Plugin.register :redmine_etherpad do
   name 'Redmine Etherpad plugin'
   author 'Charlie DeTar'
@@ -61,13 +70,6 @@ Redmine::Plugin.register :redmine_etherpad do
       host = controls.delete('host')
       scheme = controls.delete('scheme')
 
-      def hash_to_querystring(hash)
-        hash.keys.inject('') do |query_string, key|
-          query_string << '&' unless key == hash.keys.first
-          query_string << "#{URI.encode(key.to_s)}=#{URI.encode(hash[key].to_s)}"
-        end
-      end
-      
       # Hack for piratenpad.de. When referencing existings pads, everything is ok.
       # But when creating new pads, an Etherpad is created instead of an Etherpad Lite.
       # To fix this, append "/p/" when no team is given
@@ -75,9 +77,9 @@ Redmine::Plugin.register :redmine_etherpad do
       if host == "piratenpad.de" and not team
         host = "piratenpad.de/p"
       end
-
+      querystr = hash_to_querystring(controls)
       padsrc = team ? "#{scheme}://#{team}.#{host}/" : "#{scheme}://#{host}/"
-      return CGI::unescapeHTML("<iframe src='#{padsrc}#{URI.encode(padname)}?#{hash_to_querystring(controls)}' width='#{width}' height='#{height}'></iframe>").html_safe
+      return CGI::unescapeHTML("<iframe src='#{padsrc}#{URI.encode(padname)}?#{querystr}' width='#{width}' height='#{height}'></iframe>").html_safe
     end
   end
 end
